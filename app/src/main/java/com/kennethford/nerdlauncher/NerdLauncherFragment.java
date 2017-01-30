@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -65,19 +67,22 @@ public class NerdLauncherFragment extends Fragment {
 
         private ResolveInfo mResolveInfo;
         private TextView mTextView;
+        private ImageView mImageView;
 
         public ActivityHolder (View itemView) {
             super(itemView);
-            mTextView = (TextView) itemView;
-            mTextView.setOnClickListener(this);
+            mImageView = (ImageView) itemView.findViewById(R.id.list_activity_item_icon);
+            mTextView = (TextView) itemView.findViewById(R.id.list_activity_item_label);
+            itemView.setOnClickListener(this);
         }
 
         public void bindActivity (ResolveInfo resolveInfo) {
             mResolveInfo = resolveInfo;
             PackageManager pm = getActivity().getPackageManager();
             String appName = mResolveInfo.loadLabel(pm).toString();
-            mResolveInfo.loadIcon(pm);
+            Drawable appIcon = mResolveInfo.loadIcon(pm);
             mTextView.setText(appName);
+            mImageView.setImageDrawable(appIcon);
         }
 
         @Override
@@ -101,7 +106,7 @@ public class NerdLauncherFragment extends Fragment {
         public ActivityHolder onCreateViewHolder (ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
 
-            View view = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            View view = inflater.inflate(R.layout.list_activity_item, parent, false);
             return new ActivityHolder(view);
         }
 
